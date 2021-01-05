@@ -19,8 +19,6 @@ function LogoTitle() {
   );
 }
 
-// export const AuthContext = React.createContext(null)
-
 function App() {
   const [userName,setuserName]=useState(null);
   const [loading, setLoading] = useState(true)

@@ -262,8 +262,7 @@ const [refreshing, setRefreshing] = React.useState(false);
           text={value}
           ref={search1}
           onChangeText={text => searchItems(text)}
-          barTintColor={"#f2f2f1"}
-          searchBarStyle="minimal"
+          barTintColor="#fafafa"
           onSearchButtonPress={() => search1.current.blur()}
           onCancelButtonPress={() => search1.current.blur()}
              />
@@ -341,8 +340,8 @@ const styles = StyleSheet.create({
      borderRightWidth:1,
      borderTopWidth:1,
      borderBottomWidth:1,
-     borderRadius:20,
-     width:130,
+     borderRadius:10,
+     width:133,
   },
 });
 

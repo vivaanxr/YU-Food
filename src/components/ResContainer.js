@@ -49,9 +49,10 @@ if( convertedOpenTime <= currenttime && currenttime <= convertedCloseTime ) {
     var status="Closed"
     var Time=openTime
     var open=false
-    if(currentday==7){
-      var Time="Weekend"
-    }
+  }
+
+  if((currentday==7 || currentday==6) && Weekend=="true"){
+    var Time="Weekend"
   }
 
 if(YUcard=="yes"){
@@ -60,6 +61,13 @@ if(YUcard=="yes"){
   sourceforYUcard=require('../../assets/redcross.jpeg')
 }
 
+if(status=="Closed" && currentday==6){
+  Time=WopenTime
+}
+
+if(status=="Closed" && currentday==0){
+  Time=openTime
+}
 
   return (
 
