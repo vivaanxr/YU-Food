@@ -1,5 +1,18 @@
-import React, { useState,useEffect } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, Image,PixelRatio,Dimensions } from 'react-native';
+
+const {
+  width: SCREEN_WIDTH,
+  height: SCREEN_HEIGHT,
+} = Dimensions.get('window');
+
+// based on iphone 5s's scale
+const scale = SCREEN_WIDTH / 500;
+
+export function normalize(size) {
+  const newSize = size * scale 
+    return Math.round(PixelRatio.roundToNearestPixel(newSize))  
+}
 
 const ResContainer = ({ Name, Building,openTime="00:00",closeTime ="20:59",YUcard,WcloseTime,WopenTime,Weekend}) => {
 
@@ -32,33 +45,33 @@ convertedCloseTime=60*convertedCloseTime[0]+convertedCloseTime[1];
 
 
 if( convertedOpenTime <= currenttime && currenttime <= convertedCloseTime ) {
-    sourceforstatus=require('../../assets/greentick.jpeg')
+    sourceforstatus=require('../../assets/greentick-compressed.jpg')
     var status="Open";
     var Time=closeTime
     var open=true
   }else{
-    sourceforstatus=require('../../assets/redcross.jpeg')
+    sourceforstatus=require('../../assets/redcross-compressed.jpg')
     var status="Closed"
     var Time=openTime
     var open=false
     }
   
 
-  if(Weekend=="true"&&(currentday==7|| currentday==0)){
-    sourceforstatus=require('../../assets/redcross.jpeg')
+  if(Weekend=="CLOSED"&&(currentday==7|| currentday==0)){
+    sourceforstatus=require('../../assets/redcross-compressed.jpg')
     var status="Closed"
     var Time=openTime
     var open=false
   }
 
-  if((currentday==7 || currentday==6) && Weekend=="true"){
+  if((currentday==7 || currentday==6) && Weekend=="CLOSED"){
     var Time="Weekend"
   }
 
-if(YUcard=="yes"){
-  sourceforYUcard=sourceforYUcard=require('../../assets/greentick.jpeg')
+if(YUcard=="TRUE"){
+  sourceforYUcard=sourceforYUcard=require('../../assets/greentick-compressed.jpg')
 }else{
-  sourceforYUcard=require('../../assets/redcross.jpeg')
+  sourceforYUcard=require('../../assets/redcross-compressed.jpg')
 }
 
 if(status=="Closed" && currentday==6){
@@ -107,7 +120,7 @@ const styles = StyleSheet.create({
     },
     title:{
       color:"black",
-      fontSize: 27,
+      fontSize: normalize(27),
       fontFamily: "NewYorkMedium-Medium"
     },
     open:{
