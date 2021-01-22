@@ -2,8 +2,22 @@ import React,{useEffect,useState} from 'react';
 import { View, Text, StyleSheet ,TouchableOpacity,Image,TextInput} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import RNRestart from 'react-native-restart'; // Import package from node modules
+import RNRestart from 'react-native-restart';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
 
+const firebaseConfig = {
+  apiKey: 'AIzaSyCZm25yKGgFTsdu3PGzGQqU67mqwQLDstA',
+  authDomain: 'fir-testing-c9440.firebaseapp.com',
+  databaseURL: 'https://fir-testing-c9440.firebaseio.com',
+  projectId: 'fir-testing-c9440',
+  storageBucket: 'fir-testing-c9440.appspot.com',
+  messagingSenderId: '766679207635',
+  appId: '1:766679207635:ios:03a4d9f4b2052617b74e26' };
+
+!firebase.apps.length ? firebase.initializeApp(firebaseConfig) : firebase.app();
+
+const db = firebase.firestore();
 
 const NamePage = ({navigation}) => {
   const [name,setName]=useState("");
@@ -19,6 +33,10 @@ const NamePage = ({navigation}) => {
     } catch (e) {
       console.log("errorNamePage")
     }
+    userData={
+      Name:name
+    }
+    const res = await db.collection('users').doc(name).set(userData);
     RNRestart.Restart();
   }
 
