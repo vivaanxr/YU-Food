@@ -1,13 +1,14 @@
 import React,{ useState,useEffect } from 'react';
-import {RefreshControl,View, Text, StyleSheet, FlatList ,TouchableOpacity,Image,LogBox,keyboard} from 'react-native';
+import {View, Text, StyleSheet, FlatList ,TouchableOpacity,Image,LogBox,Dimensions, TextInput} from 'react-native';
 import ResContainer from '../components/ResContainer';
 import SearchBar from 'react-native-search-bar';
 import SplashScreen from 'react-native-splash-screen'
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import Invite from '../components/Invite';
+import Comp from '../components/Comp';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { ScrollView } from 'react-native-gesture-handler';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCZm25yKGgFTsdu3PGzGQqU67mqwQLDstA',
@@ -17,7 +18,6 @@ const firebaseConfig = {
   storageBucket: 'fir-testing-c9440.appspot.com',
   messagingSenderId: '766679207635',
   appId: '1:766679207635:ios:03a4d9f4b2052617b74e26' };
-
 !firebase.apps.length ? firebase.initializeApp(firebaseConfig) : firebase.app();
 
 const db = firebase.firestore();
@@ -33,9 +33,9 @@ currentday=parseInt(currentday)
 currentHour=parseInt(currentHour);
 currentMin=parseInt(currentMin);
 var currenttime=60*currentHour+currentMin;
-var greeting=""
+var greeting="Writing Something special for you.."
 
-if((3<currentHour)&&(currentHour<=12)){
+if((1<currentHour)&&(currentHour<=12)){
   greeting="Good Morning";
 }else if((12<currentHour)&&(currentHour<=18)){
   greeting="Good Afternoon";
@@ -45,23 +45,46 @@ if((3<currentHour)&&(currentHour<=12)){
   greeting="Good evening";
 }
 
-const wait = (timeout) => {
-  return new Promise(resolve => {
-    setTimeout(resolve, timeout);
-  });
+var nodata="Loading..."
+var tagline="Writing something nice for you..."
+var sharelink=""
+
+function makeid(length) {
+  var result           = '';
+  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for ( var i = 0; i < length; i++ ) {
+     result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
 }
 
-var nodata="Loading..."
-
-const Home = () => {
+const Home = ({navigation}) => {
 
   const [restaurants, setrestaurants] = useState([]);
   const [value,setValue]=useState("");
   const [userName,setuserName]=useState("");
-  const [loading,setloading]=useState(true);
   const search1 = React.createRef();
  
   useEffect(() => {
+
+    async function getName(){
+        const result= await AsyncStorage.getItem('uid')
+        JSON.parse(result);
+}
+    getName();
+
+  const usersRef = firebase.firestore().collection('users');
+  firebase.auth().onAuthStateChanged(result => {
+      usersRef
+        .doc(result.uid)
+        .get()
+        .then((document) => {
+          userData = document.data()
+          setuserName((userData["fullName"]))
+        })
+
+  });
 
     async function getData(){
       var collection={}
@@ -69,31 +92,21 @@ const Home = () => {
       const doc = await collectionRef.get();
       collection=doc.data();
       const Ref = db.collection(collection.Name);
+      tagline=collection.tagline
+      sharelink=collection.InviteLink
       const snapshot = await Ref.get();
       const restaurantsArray = [];
       snapshot.forEach(doc => {
         restaurantsArray.push(doc.data());
-      });
+      })
       setrestaurants(restaurantsArray);
       permArray=restaurantsArray;
       currentArray=restaurantsArray;
-      nodata="No Restaurants are open right now!"
-    }
-    async function getName(){
-      try {
-        const result= await AsyncStorage.getItem('namekey')
-        if(result !== null) {
-          setuserName(result);
-        }
-      }catch(e) {
-       console.log('error')
-      }
+      nodata="No Restaurants are open at this location! Please choose another one"
     } 
-        getName();
         getData();
         LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
         SplashScreen.hide();
-        setloading(false)
   }, []);
 
   let filterloc = (loc) => {
@@ -101,39 +114,102 @@ const Home = () => {
     for (const res of permArray){
        if( (loc==res["LOCATION"]) ) {
          tempArray.push(res);
-             setrestaurants(tempArray)
-             currentArray=tempArray;
                               }
+          setrestaurants(tempArray)
+          currentArray=tempArray;
   }
 }
+
+  const resView = (item) =>{
+    navigation.navigate("ResPage",{item})
+  }
 
 let filteropen = () => {
   var tempArray=[]  
 
-  for (const res of permArray){
+  for (const res of currentArray){
 
-    var convertedOpenTime = res["openTime"].split(":");
-    if(res['WopenTime']!=undefined && (currentday==0||currentday==7)){
-      convertedOpenTime=res['WopenTime'].split(":");
+    var openTime="";
+    var closeTime="";
+
+    if(currentday==1){
+      closeTime=res['MC'];
+      openTime=res['M'];
     }
+    if(currentday==2){
+      closeTime=res['TC'];
+      openTime=res['T'];
+    }
+    if(currentday==3){
+      closeTime=res['WC'];
+      openTime=res['W'];
+    }
+    if(currentday==4){
+      closeTime=res['THC'];
+      openTime=res['TH'];
+    }
+    if(currentday==5){
+      closeTime=res['FC'];
+      openTime=res['F'];
+    }
+    if(currentday==6){
+      closeTime=res['SAC'];
+      openTime=res['SA'];
+    }
+    if(currentday==0){
+      closeTime=res['SUC'];
+      openTime=res['SU'];
+    }
+
+    if(res["Name"]=="Pizza Studio"){
+      if(currentday==1 && 0<=currenttime&& currenttime<=180){
+        tempArray.push(res)
+      }
+      if(currentday==5 && 0<=currenttime&& currenttime<=120){
+        tempArray.push(res)
+      }
+      if(currentday==6 && 0<=currenttime&& currenttime<=180){
+        tempArray.push(res)
+      }
+      if(currentday==0 && 0<=currenttime&& currenttime<=180){
+        tempArray.push(res)
+      }
+    }
+    
+    if(res["Name"]=="Osmow's"){
+      if(currentday==1 && 0<=currenttime&& currenttime<=90){
+        tempArray.push(res)
+      }
+      if(currentday==2 && 0<=currenttime&& currenttime<=90){
+        tempArray.push(res)
+      }
+      if(currentday==3 && 0<=currenttime&& currenttime<=90){
+        tempArray.push(res)
+      }
+      if(currentday==4 && 0<=currenttime&& currenttime<=90){
+        tempArray.push(res)
+      }
+      if(currentday==5 && 0<=currenttime&& currenttime<=120){
+        tempArray.push(res)
+      }
+      if(currentday==6 && 0<=currenttime&& currenttime<=120){
+        tempArray.push(res)
+      }
+      if(currentday==0 && 0<=currenttime&& currenttime<=120){
+        tempArray.push(res)
+      }
+    }
+
+    var convertedOpenTime = openTime.split(":");
     convertedOpenTime[0]=parseInt(convertedOpenTime[0],10)
     convertedOpenTime[1]=parseInt(convertedOpenTime[1],10);
     convertedOpenTime=60*convertedOpenTime[0]+convertedOpenTime[1];
     
-    var convertedCloseTime = res["closeTime"].split(":");
-    if(res['WcloseTime']!=undefined && (currentday==0||currentday==7)){
-      convertedCloseTime=res['WcloseTime'].split(":");
-    }
+    var convertedCloseTime = closeTime.split(":");
     convertedCloseTime[0]=parseInt(convertedCloseTime[0],10)
     convertedCloseTime[1]=parseInt(convertedCloseTime[1],10);
     convertedCloseTime=60*convertedCloseTime[0]+convertedCloseTime[1];
-
-    var open=true
-    if(res['Weekend']=="true"&&(currentday==7 || currentday==0)){
-      var open=false
-    }
-
-    if( convertedOpenTime <= currenttime && currenttime <= convertedCloseTime && open==true ) {
+    if( convertedOpenTime <= currenttime && currenttime <= convertedCloseTime) {
         tempArray.push(res);
                             }
         setrestaurants(tempArray)
@@ -141,25 +217,16 @@ let filteropen = () => {
 }
 }
 
-let filtercof = (cof) => {
+let filtercof = () => {
   var tempArray=[]  
   for (const res of permArray){
-     if( (cof==res["coffee"]) ) {
+     if( ("TRUE"==res["coffee"]) ) {
        tempArray.push(res);
+                            }
            setrestaurants(tempArray)
            currentArray=tempArray;
-                            }
 }
 }
-
-const [refreshing, setRefreshing] = React.useState(false);
-
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-
-    wait(2000).then(() => setRefreshing(false));
-    setrestaurants(permArray);
-  }, []);
 
   function searchItems(text){
     let newData = currentArray.filter(item => {
@@ -176,84 +243,64 @@ const [refreshing, setRefreshing] = React.useState(false);
     }
   };
 
-  if (loading) {
-    return (
-      <></>
-    )
-  }
 
+const filterArray=[{source: (require('../../assets/open-compressed.jpg')),name:"Open",filter:"open"}
+,{source: (require('../../assets/coffee-compressed.jpg')),name:"Coffee",filter:"cof"}
+,{source: (require('../../assets/pancake-compressed.jpg')),name:"Kitchen@Res",filter:"loc"}
+,{source: (require('../../assets/vari-compressed.jpg')),name:"Vari Hall",filter:"loc"}
+,{source: (require('../../assets/yorkLanes-compressed.jpg')),name:"York Lanes",filter: "loc"}
+,{source: (require('../../assets/quad-compressed.jpg')),name:"Quad",filter:"loc"}]
+
+function filterhack(filter,name){
+    if(filter=="loc"){
+      filterloc(name)
+    }else if(filter=="cof"){
+      filtercof()
+    }else if(filter=="open"){
+      filteropen()
+    }
+}
   return (
 
   <KeyboardAwareScrollView
-      contentContainerStyle={styles.scrollView}
-      refreshControl={
-      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
       style={{backgroundColor: "#fff"}}
       extraScrollHeight	={200}
-      resetScrollToCoords={{x:500,y:500}}
-    >
+      ref={ref => { scrollView = ref }}
+      onContentSizeChange={() => scrollView.scrollToPosition	(0,500)}
+      >
 
-  <Image source={require('../../assets/header.jpg')} style={{width: '100%', height: 150}}/>
+  <Image source={require('../../assets/header-compressed.jpg')} style={{width: '100%', height: 150,resizeMode:'cover'}}/>
       <View style={styles.greetingview}>
-     <Text style={styles.greeting}>{greeting}, {userName}!</Text>
-      <Text style={{textAlign:"center",fontSize:16.5,fontFamily:"NewYorkSmall-Regular"}}>Good luck for the winter semester! Give your best</Text>
+      <View style={{flex:1,flexDirection:'row',paddingLeft:70}}>
+     <Text style={styles.greeting}>{greeting}, </Text>
+     <Text style={styles.username}>{userName}</Text>
+     <Text style={styles.greeting}>!</Text>
+     </View>
+      <Text style={{textAlign:"center",fontSize:16.5,fontFamily:"NewYorkSmall-Regular"}}>{tagline}</Text>
     </View>
-    <Invite />
     <Text style={styles.line}> {"\n"} </Text>
 
-    <Text style={{fontSize:40,fontFamily:"NewYorkLarge-Medium"}}>Filters</Text>
+    <Text style={{fontSize:40,fontFamily:"NewYorkLarge-Medium",}}>Filters</Text>
 
-    <View style={styles.filtercontainer}>
-    <TouchableOpacity
-    onPress={() => filteropen()}>
-      <View style={styles.filterView}>
-        <Image style={styles.filter} source={(require('./../../assets/open.png'))}/>
-        <Text style={styles.filterButtonText}>Open</Text>
-      </View>
-    </TouchableOpacity>
-
-    <TouchableOpacity
-    onPress={() => filtercof("true")}>
-     <View style={styles.filterView}>
-    <Image style={styles.filter} source={(require('./../../assets/coffee.png'))}/>
-    <Text style={styles.filterButtonText}>Coffee</Text>
-    </View>
-    </TouchableOpacity>
-
-    <TouchableOpacity
-    onPress={() => filterloc(loc="Winters")}>
-      <View style={styles.filterView}>
-    <Image style={styles.filter} source={(require('./../../assets/pancake.png'))}/>
-    <Text style={styles.filterButtonText}>Kitchen@Res</Text>
-    </View>
-    </TouchableOpacity>
-
-    </View>
-    <View style={styles.filtercontainer}>
-    <TouchableOpacity
-    onPress={() => filterloc(loc="vari")}>
-      <View style={styles.filterView}>
-    <Image style={styles.filter} source={(require('./../../assets/vari.png'))}/>
-    <Text style={styles.filterButtonText}>Vari Hall</Text>
-    </View>
-    </TouchableOpacity>
-
-    <TouchableOpacity
-    onPress={() => filterloc("Lanes")}>
-      <View style={styles.filterView}>
-    <Image style={styles.filter} source={(require('./../../assets/yorkLanes.png'))}/>
-    <Text style={styles.filterButtonText}>York Lanes</Text>
-    </View>
-    </TouchableOpacity>
-    <TouchableOpacity
-    onPress={() => filterloc(loc="Quad")}>
-    <View style={styles.filterView}>
-    <Image style={styles.filter} source={(require('./../../assets/quad.png'))}/>
-    <Text style={styles.filterButtonText}>Quad</Text>
-    </View>
-    </TouchableOpacity>
-    </View>
+    <FlatList
+      data={filterArray}
+      numColumns={3}
+      keyExtractor={()=>makeid(5)}
+      renderItem={({ item }) => {
+        return (
+          <View style={{width: (Dimensions.get('screen').width) / 3,height:158,borderWidth:1,borderColor:"#e6e6e6",borderRadius:10}}>
+            <TouchableOpacity onPress={()=> {
+            scrollView.scrollToPosition	(0,500)
+            filterhack(item.filter,item.name)}}>
+            <Comp 
+            source={item.source}
+            name={item.name}
+            />
+            </TouchableOpacity>
+          </View>
+        );
+      }}
+    />
 
     <Text>{"\n"}</Text>
     <Text style={{fontSize:40,fontFamily:"NewYorkLarge-Medium"}}>Restaurants</Text>
@@ -270,30 +317,44 @@ const [refreshing, setRefreshing] = React.useState(false);
       keyExtractor={restaurants => restaurants.Name}
       data={restaurants}
       scrollEnabled={false}
-      ListEmptyComponent={<Text style={{textAlign:'center',fontSize:30,paddingTop:50,paddingBottom:30}}>{nodata}</Text>}
+      ListEmptyComponent={<Text style={{textAlign:'center',fontSize:20,paddingTop:50,paddingBottom:30,paddingLeft:15,paddingRight:15,fontFamily:"NewYorkSmall-RegularItalic"}}>{nodata}</Text>}
       renderItem={({ item }) => {
         return (
+        // <TouchableOpacity onPress={()=>resView(item)}>
           <View>
+            <Text style={{lineHeight:3}}>{"\n"}</Text> 
             <ResContainer
               Name={item.Name}
               Building={item.Building}
-              closeTime={item.closeTime}
-              YUcard={item.YUcard}
-              openTime={item.openTime}
-              WopenTime={item.WopenTime}
-              WcloseTime={item.WcloseTime}
-              Weekend={item.Weekend}
-            /> 
+              YUcard={item.YUCARD}
+              Monday={item.M}
+              Tuesday={item.T}
+              Wednesday={item.W}
+              Thursday={item.TH}
+              Friday={item.F}
+              Saturday={item.SA}
+              Sunday={item.SU}
+              MondayC={item.MC}
+              TuesdayC={item.TC}
+              WednesdayC={item.WC}
+              ThursdayC={item.THC}
+              FridayC={item.FC}
+              SaturdayC={item.SAC}
+              SundayC={item.SUC}
+              midnight={item.midnight}
+            />
           </View>
+        // </TouchableOpacity>
         );
       }}
     />
+
     <Text>{"\n"}</Text>
     <Text>{"\n"}</Text>
     <Text>{"\n"}</Text>
     <Text>{"\n"}</Text>
     <Text>{"\n"}</Text>
-    <Text>{"\n"}</Text>
+    <Text style={{color:"#ededed",textAlign:'center'}}>Nosy! Aren't you</Text>
     <Text>{"\n"}</Text>
 
   </KeyboardAwareScrollView>
@@ -306,11 +367,6 @@ const [refreshing, setRefreshing] = React.useState(false);
 
 
 const styles = StyleSheet.create({
-  filtercontainer:{
-    flex:1,
-    flexDirection: 'row',
-    justifyContent:'space-evenly'
-  },
   greetingview:{
     borderBottomWidth:1,
     borderColor:"#ededed",
@@ -323,26 +379,12 @@ const styles = StyleSheet.create({
     fontFamily:"NewYorkMedium-Regular",
     lineHeight:60
   },
-  filterButtonText:{
-    textAlign:'center',
-    fontFamily:"NewYorkSmall-Regular",
-    lineHeight:25
-  },
-  filter:{
-    resizeMode:"contain",
-     height:140,
-     width:140,
-     backgroundColor:"#fafafa"
-  },
-  filterView:{
-    borderColor:"#e6e6e6",
-     borderLeftWidth:1,
-     borderRightWidth:1,
-     borderTopWidth:1,
-     borderBottomWidth:1,
-     borderRadius:10,
-     width:133,
-  },
+  username:{
+    textAlign:"center",
+    fontSize:25,
+    fontFamily:"NewYorkMedium-Regular",
+    lineHeight:60
+  }
 });
 
 export default Home;

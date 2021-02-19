@@ -1,17 +1,14 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image,TouchableOpacity,Dimensions} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { View, Text, StyleSheet, Image,TouchableOpacity,Linking} from 'react-native';
 
-const Invite = ({link}) => {
-  const navigation = useNavigation();
-
+const Dev = () => {
   return (
-    <TouchableOpacity onPress={()=>navigation.navigate("InvitePage")}>
+    <TouchableOpacity onPress={()=>Linking.openURL("https://www.instagram.com/vivu.yyz/")}>
       <View style={styles.container}>
       <View style={{flexDirection:'row',flex:1,justifyContent:"space-between"}}>
           <View style={{flexDirection:'row'}}>
-            <Image source={require('../../assets/invite-compressed.jpg')} style={{width: 35, height: 35,marginTop: 13}} />
-            <Text style={{fontSize:18,lineHeight:63,fontFamily:"NewYorkSmall-Regular"}}> {"\ "}Invite a Friend</Text>
+            <Image source={require('../../assets/instagram-compressed.jpg')} style={{width: 25, height: 25,marginTop: 17,marginLeft:5}} />
+            <Text style={{fontSize:18,lineHeight:63,fontFamily:"NewYorkSmall-Regular"}}>{"\ \ "}Contact the developer</Text>
           </View>
         <Image source={require('../../assets/next-icon-compressed.jpg')} style={{width: 35, height: 35,marginTop: 13}} />
       </View>
@@ -38,4 +35,4 @@ const styles = StyleSheet.create({
     }
   });
 
-export default Invite;
+export default Dev;
