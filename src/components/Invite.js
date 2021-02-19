@@ -6,7 +6,7 @@ const Invite = ({link}) => {
   const navigation = useNavigation();
 
   return (
-    <TouchableOpacity onPress={()=>navigation.navigate("InvitePage")}>
+    <TouchableOpacity onPress={()=>navigation.navigate("InvitePage",{InviteLink:link})}>
       <View style={styles.container}>
       <View style={{flexDirection:'row',flex:1,justifyContent:"space-between"}}>
           <View style={{flexDirection:'row'}}>
