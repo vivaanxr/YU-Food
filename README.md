@@ -1,7 +1,7 @@
 # YU Food 
 
 
-![YUfoodicon](appicon.png)
+![YUfoodicon](Appicon.png)
 
 
 -----
