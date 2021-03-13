@@ -6,9 +6,7 @@ import SplashScreen from 'react-native-splash-screen'
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import Comp from '../components/Comp';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { ScrollView } from 'react-native-gesture-handler';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCZm25yKGgFTsdu3PGzGQqU67mqwQLDstA',
@@ -68,11 +66,11 @@ const Home = ({navigation}) => {
  
   useEffect(() => {
 
-    async function getName(){
-        const result= await AsyncStorage.getItem('uid')
-        JSON.parse(result);
-}
-    getName();
+//     async function getName(){
+//         const result= await AsyncStorage.getItem('uid')
+//         JSON.parse(result);
+// }
+//     getName();
 
   const usersRef = firebase.firestore().collection('users');
   firebase.auth().onAuthStateChanged(result => {

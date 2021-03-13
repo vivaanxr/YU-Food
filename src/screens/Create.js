@@ -70,7 +70,7 @@ const onRegisterPress = () => {
 return(
 
   <View style={styles.headerview}>
-    <Text style={{fontSize:30,marginTop:"20%",fontFamily:"AzoSans-Medium",alignSelf:'center',marginBottom:"10%"}}>Registration</Text>
+    <Text style={{fontSize:30,marginTop:"10%",fontFamily:"AzoSans-Medium",alignSelf:'center',marginBottom:"10%"}}>Registration</Text>
     <TextInput
         style={styles.input}
         placeholder="First Name"

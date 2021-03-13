@@ -95,7 +95,7 @@ return(
       />
 
 
-      <TouchableOpacity onPress={()=>{navigation.navigate("Forgot")}}>
+      <TouchableOpacity onPress={()=>{navigation.navigate("Forgot",{Next:"Login"})}}>
       <Text style={styles.Fpassword}>Forgot Password</Text>
       </TouchableOpacity>
     <TouchableOpacity style={styles.touchable} onPress={()=> onLoginPress()}>
