@@ -14,7 +14,7 @@ export function normalize(size) {
     return Math.round(PixelRatio.roundToNearestPixel(newSize))  
 }
 
-const ResContainer = ({ Name, Building,YUcard,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday,MondayC,TuesdayC,WednesdayC,ThursdayC,FridayC,SaturdayC,SundayC}) => {
+const ResContainer2 = ({ Name, Building,YUcard,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday,MondayC,TuesdayC,WednesdayC,ThursdayC,FridayC,SaturdayC,SundayC}) => {
 
 var currentDate = new Date();
 var currentHour =currentDate.getHours();
@@ -282,7 +282,7 @@ if(YUcard=="TRUE"){
 
 if(isOpen){
   var openorclose="Closes At:"
-}else {
+}else{
   var openorclose="Opens At:"
 }
 
@@ -307,9 +307,7 @@ if(isOpen){
 
 const styles = StyleSheet.create({
     container: {
-        borderColor: "#f2f2f2",
-        borderWidth:2,
-        borderRadius: 16,
+
         height:125,
         width:"97%",
         alignSelf:'center',
@@ -349,4 +347,4 @@ const styles = StyleSheet.create({
     }
   });
 
-export default ResContainer;
+export default ResContainer2;

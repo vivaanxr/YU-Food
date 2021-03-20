@@ -18,12 +18,14 @@ return(
   <View style={styles.headerview}>
     <Image source={require('../../assets/lion.png')} style={styles.lion} />
     <Text style={styles.welcomeText}>Welcome</Text>
-    <TouchableOpacity style={{marginTop:"50%",alignSelf:'center',height:70}} onPress={()=> Login()}>
+    <View style={{marginTop:"30%"}}>
+    <TouchableOpacity style={{justifyContent:'flex-end',alignSelf:'center'}} onPress={()=> Login()}>
     <Image source={require('../../assets/Login.png')} style={{height:70,width:350,resizeMode:'cover'}}/>
     </TouchableOpacity>
-    <TouchableOpacity style={{marginTop:5,alignSelf:'center',height:80}} onPress={()=> Create()}>
+    <TouchableOpacity style={{justifyContent:'flex-end',paddingBottom:"8%",alignSelf:'center'}} onPress={()=> Create()}>
     <Image source={require('../../assets/Create.png')} style={{height:80,width:350,resizeMode:'cover'}}/>
     </TouchableOpacity>
+    </View>
   </View>
   );
 

@@ -6,7 +6,7 @@ const InvitePage = () => {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        url:"https://eclass.yorku.ca/eclass",
+        url:"https://apps.apple.com/app/id1547692715",
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {

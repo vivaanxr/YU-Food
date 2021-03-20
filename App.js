@@ -19,7 +19,7 @@ import * as firebase from 'firebase';
 import '@firebase/auth';
 import '@firebase/firestore';
 import Bugsnag from '@bugsnag/react-native'
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 import AccountSettings from './src/screens/AccountSettings.js';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
@@ -40,18 +40,20 @@ Bugsnag.start()
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-function LogoTitle() {
-  return (
-    <Image
-      style={{ width: 50, height: 50 }}
-      source={require("./assets/Appicon-compressed.jpg")}
-    />
-  );
-}
+// function LogoTitle() {
+//   return (
+//     <Image
+//       style={{ width: 50, height: 50 }}
+//       source={require("./assets/Appicon-compressed.jpg")}
+//     />
+//   );
+// }
 
 var userData=null;
+var permArray=[]
 
 function Tabs() {
+
   return (
       <Tab.Navigator initialRouteName={"Home"}
       >
@@ -94,17 +96,17 @@ function App() {
 
     useEffect(() => {
 
-      async function getName(){
-        try {
-          const result= await AsyncStorage.getItem('uid')
-          JSON.parse(result);
-          setuser(result);
-        }
-        catch(e) {
-          setLoading(false);
-        } 
-  }
-      getName();
+  //     async function getName(){
+  //       try {
+  //         const result= await AsyncStorage.getItem('uid')
+  //         JSON.parse(result);
+  //         setuser(result);
+  //       }
+  //       catch(e) {
+  //         setLoading(false);
+  //       } 
+  // }
+  //     getName();
 
     const usersRef = firebase.firestore().collection('users');
     firebase.auth().onAuthStateChanged(user => {
@@ -139,6 +141,7 @@ function App() {
         {userData ? 
         (
           <Stack.Screen name="Tabs" component={Tabs}
+          
           options={{ 
             title: 'YU Food',
             headerStyle: {backgroundColor:'#fff',height: 100 },

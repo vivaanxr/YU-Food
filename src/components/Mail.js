@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image,TouchableOpacity,Linking} from 'react-nat
 
 const Mail = () => {
   return (
-    <TouchableOpacity onPress={() => Linking.openURL('mailto:vivaanxr@protonmail.com') } >
+    <TouchableOpacity onPress={() => Linking.openURL('https://forms.gle/CNrDiippXwdp8X2B6') } >
       <View style={styles.container}>
       <View style={{flexDirection:'row',flex:1,justifyContent:"space-between"}}>
           <View style={{flexDirection:'row'}}>

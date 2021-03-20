@@ -6,9 +6,7 @@ import SplashScreen from 'react-native-splash-screen'
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import Comp from '../components/Comp';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { ScrollView } from 'react-native-gesture-handler';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyCZm25yKGgFTsdu3PGzGQqU67mqwQLDstA',
@@ -68,11 +66,11 @@ const Home = ({navigation}) => {
  
   useEffect(() => {
 
-    async function getName(){
-        const result= await AsyncStorage.getItem('uid')
-        JSON.parse(result);
-}
-    getName();
+//     async function getName(){
+//         const result= await AsyncStorage.getItem('uid')
+//         JSON.parse(result);
+// }
+//     getName();
 
   const usersRef = firebase.firestore().collection('users');
   firebase.auth().onAuthStateChanged(result => {
@@ -246,14 +244,20 @@ let filtercof = () => {
 
 const filterArray=[{source: (require('../../assets/open-compressed.jpg')),name:"Open",filter:"open"}
 ,{source: (require('../../assets/coffee-compressed.jpg')),name:"Coffee",filter:"cof"}
-,{source: (require('../../assets/pancake-compressed.jpg')),name:"Kitchen@Res",filter:"loc"}
+,{source: (require('../../assets/pancake-compressed.png')),name:"Residences",filter:"loc"}
 ,{source: (require('../../assets/vari-compressed.jpg')),name:"Vari Hall",filter:"loc"}
 ,{source: (require('../../assets/yorkLanes-compressed.jpg')),name:"York Lanes",filter: "loc"}
 ,{source: (require('../../assets/quad-compressed.jpg')),name:"Quad",filter:"loc"}]
 
 function filterhack(filter,name){
     if(filter=="loc"){
-      filterloc(name)
+      if(name=="Residences")
+      {
+        filterloc("Kitchen@Res")
+      }
+      else{
+        filterloc(name)
+      }
     }else if(filter=="cof"){
       filtercof()
     }else if(filter=="open"){
