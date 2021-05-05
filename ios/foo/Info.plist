@@ -29,13 +29,10 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 		<key>NSExceptionDomains</key>
-		<dict>
-			<key>localhost</key>
-			<string></string>
-		</dict>
+		<dict/>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Current location is currently not used for any purpose but react-native-maps api is used to show restaurants on the map</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>NewYorkExtraLarge-Black.otf</string>
