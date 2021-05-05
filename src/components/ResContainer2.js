@@ -11,8 +11,9 @@ export function normalize(size) {
 	return Math.round(PixelRatio.roundToNearestPixel(newSize));
 }
 
-const ResContainer = ({
+const ResContainer2 = ({
 	Name,
+	Building,
 	YUcard,
 	Monday,
 	Tuesday,
@@ -318,9 +319,6 @@ const ResContainer = ({
 
 const styles = StyleSheet.create({
 	container: {
-		borderColor: '#f2f2f2',
-		borderWidth: 2,
-		borderRadius: 16,
 		height: 125,
 		width: '97%',
 		alignSelf: 'center',
@@ -361,4 +359,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default ResContainer;
+export default ResContainer2;
